@@ -1,0 +1,11 @@
+{
+  "name": "corsproxy",
+  "version": "0.0.1",
+  "description": "CORS Proxy",
+  "dependencies": {
+    "http-proxy": "^1.6.2",
+    "config": "^1.8.1"
+  },
+  "devDependencies": {
+  }
+}

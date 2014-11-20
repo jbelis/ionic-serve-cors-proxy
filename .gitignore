@@ -1,0 +1,4 @@
+.idea
+.ssl
+*.log
+node_modules

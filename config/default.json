@@ -1,0 +1,16 @@
+{
+  "target": "https://www.example.com",
+  "set-cookies": true,
+  "cors": {
+	"origin": "http://localhost:8100",
+	"credentials": true
+  },
+  "listener": {
+	"secure": false,
+	"port": 5050,
+	"ssl": {
+	  "key": "./.ssl/server-key.pem",
+	  "cert": "./.ssl/server-cert.pem"
+	}
+  }
+}
