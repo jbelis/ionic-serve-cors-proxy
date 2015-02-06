@@ -4,7 +4,12 @@ var	httpProxy = require('http-proxy');
 var fs = require("fs");
 var config = require("config");
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+// add missing CA certificates
+require('ssl-root-cas/latest')
+	.inject()
+//	.addFile(__dirname + '/.ssl/ca/sub.class2.server.ca.pem')
+	.addFile(__dirname + '/.ssl/ca/a0298b9e378302336c4a839e2fac00f463af4323.pem')
+;
 
 var args = process.argv.slice(2);
 var target;
@@ -37,15 +42,23 @@ var proxyTarget = (config.listener.secure) ?
 proxy.on('proxyReq', function (proxyReq, req, res, options) {
 	if (config.cors) {
 		res.setHeader('Access-Control-Allow-Origin', config.cors.origin);
-		res.setHeader("Access-Control-Allow-Headers", config.cors.headers || "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
+		res.setHeader("Access-Control-Allow-Headers", config.cors.headers || "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With, Content-length");
 		res.setHeader("Access-Control-Allow-Methods", config.cors.methods || "GET, PUT, POST, PUT, DELETE, OPTIONS");
 		res.setHeader("Access-Control-Allow-Credentials", !!config.cors.credentials);
 	}
 
 	proxyReq.setHeader("Host", targetHost);
+	console.log("sending to target: ", proxyReq.method, proxyReq.path);
 });
 
 proxy.on('proxyRes', function (proxyRes, req, res) {
+	console.log("received from target: ", proxyRes.statusCode);
+
+	if (req.method === "OPTIONS" && proxyRes.statusCode === 411) {
+		//http://stackoverflow.com/questions/13251926/cors-on-dotcloud-411-length-required
+		proxyRes.statusCode = 200;
+	}
+
 	// reset the location of redirect responses
 	var location = proxyRes.headers.location;
 	if (location && location.indexOf(target) >= 0) {

@@ -4,7 +4,8 @@
   "description": "CORS Proxy",
   "dependencies": {
     "http-proxy": "^1.6.2",
-    "config": "^1.8.1"
+    "config": "^1.8.1",
+    "ssl-root-cas": "1.1.9-beta"
   },
   "devDependencies": {
   }
