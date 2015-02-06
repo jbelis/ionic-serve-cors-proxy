@@ -1,6 +1,9 @@
 
-Usage: 
+Usage 
+=====
 
-node app.js <target>
+node app.js _target_
 
+e.g.
 
+node app.js https://api.example.com
