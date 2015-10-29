@@ -54,7 +54,7 @@ proxy.on('proxyReq', function (proxyReq, req, res, options) {
 proxy.on('proxyRes', function (proxyRes, req, res) {
 	console.log("received from target: ", proxyRes.statusCode);
 
-	if (req.method === "OPTIONS" && proxyRes.statusCode === 411) {
+	if (req.method === "OPTIONS" && proxyRes.statusCode !== 200 ) {
 		//http://stackoverflow.com/questions/13251926/cors-on-dotcloud-411-length-required
 		proxyRes.statusCode = 200;
 	}
@@ -81,7 +81,8 @@ var handler = function (req, res) {
 	// You can define here your custom logic to handle the request
 	// and then proxy the request.
 	proxy.web(req, res, {
-		target: target
+		target: target,
+		secure: false
 	});
 };
 
